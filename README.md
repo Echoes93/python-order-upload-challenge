@@ -27,16 +27,17 @@ url: http://127.0.0.1:8000
 ### DB (SQLite)
 
 - File: `orders.db` represents database
-- Tables created automatically on startup:
-  - `files(id, filename UNIQUE, partner_id, period, uploaded_at)`
-  - `orders(..., source_file_id REFERENCES files(id) ON DELETE CASCADE, UNIQUE(partner_id, period, order_id))`
+- Tables are created on startup
 
 ### CSV rules
 
 - Filename: `{partner_id}_{YYYY-MM}.csv` (e.g., `1234512_2025-04.csv`), partner_id **numeric**.
 - Headers (case-sensitive; any order): `order_id,order_date,item_id,quantity,currency,total_amount`
 - Validations:
+  - reported period should be in the past
+  - `order_id` is unique
   - `order_date` ISO-8601 datetime string
+  - `order_date` should be within reported period
   - `quantity` ≥ 1, `total_amount` ≥ 0
   - `currency` in {PLN, EUR}
 
